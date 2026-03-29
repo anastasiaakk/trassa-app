@@ -4,8 +4,10 @@
 
  "productName": "Trassa",
 
- "version": "1.0.11",
+ "version": "1.0.15",
+
  "description": "Trassa desktop app",
+
  "author": "Anastasia Akk",
 
  "private": true,
@@ -46,7 +48,7 @@
 
   "electron": "^41.1.0",
 
-  "electron-builder": "^26.8.1",
+  "electron-builder": "^24.6.4",
 
   "eslint": "^9.39.4",
 
@@ -65,6 +67,7 @@
   "appId": "com.myreactapp.app",
 
   "productName": "Trassa",
+
   "artifactName": "Trassa-${version}.exe",
 
   "icon": "build/favicon.ico",
@@ -75,9 +78,10 @@
 
     "provider": "github",
 
-    "owner": "anastasiaakk8-dotcom",
+    "owner": "anastasiaakk",
 
     "repo": "trassa-app",
+
     "vPrefixedTagName": false
 
    }
@@ -91,7 +95,6 @@
    "electron.js",
 
    "preload.js"
-
 
   ],
 
