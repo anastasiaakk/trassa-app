@@ -1,5 +1,6 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, dialog } = require('electron');
 const path = require('path');
+const { autoUpdater } = require('electron-updater');
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -16,4 +17,28 @@ function createWindow() {
 
 app.whenReady().then(() => {
   createWindow();
+
+  // Проверка обновлений
+  autoUpdater.checkForUpdatesAndNotify();
+
+  autoUpdater.on("update-available", () => {
+    dialog.showMessageBox({
+      type: "info",
+      title: "Обновление доступно",
+      message: "Доступна новая версия приложения Трасса. Она будет скачана автоматически."
+    });
+  });
+
+  autoUpdater.on("update-downloaded", () => {
+    dialog.showMessageBox({
+      type: "info",
+      title: "Обновление готово",
+      message: "Обновление скачано. Установить сейчас?",
+      buttons: ["Да", "Позже"]
+    }).then(result => {
+      if (result.response === 0) {
+        autoUpdater.quitAndInstall();
+      }
+    });
+  });
 });

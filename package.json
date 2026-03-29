@@ -1,9 +1,12 @@
 {
 
  "name": "trassa",
- "productName": "Трасса",
 
- "version": "1.0.0",
+ "productName": "Trassa",
+
+ "version": "1.0.11",
+ "description": "Trassa desktop app",
+ "author": "Anastasia Akk",
 
  "private": true,
 
@@ -19,7 +22,7 @@
 
   "electron": "electron .",
 
-  "dist": "npm run build && electron-builder"
+  "dist": "npm run build && electron-builder --publish always"
 
  },
 
@@ -58,22 +61,50 @@
  },
 
  "build": {
+
   "appId": "com.myreactapp.app",
+
+  "productName": "Trassa",
+  "artifactName": "Trassa-${version}.exe",
+
   "icon": "build/favicon.ico",
+
+  "publish": [
+
+   {
+
+    "provider": "github",
+
+    "owner": "anastasiaakk8-dotcom",
+
+    "repo": "trassa-app",
+    "vPrefixedTagName": false
+
+   }
+
+  ],
+
   "files": [
+
    "dist/**/*",
+
    "electron.js",
-   "preload.js",
-    "package.json"
+
+   "preload.js"
+
+
   ],
 
   "directories": {
+
    "buildResources": "assets"
+
   },
 
   "win": {
 
    "target": "nsis",
+
    "icon": "build/favicon.ico"
 
   }
