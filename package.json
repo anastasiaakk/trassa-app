@@ -4,7 +4,7 @@
 
  "productName": "Trassa",
 
- "version": "1.0.21",
+ "version": "1.0.22",
 
  "description": "Trassa desktop app",
 
@@ -29,6 +29,8 @@
  },
 
  "dependencies": {
+
+  "electron-updater": "^6.8.3",
 
   "react": "^19.2.4",
 
@@ -94,7 +96,8 @@
 
    "electron.js",
 
-   "preload.js"
+   "preload.js",
+   "node_modules/**/*"
 
   ],
 
