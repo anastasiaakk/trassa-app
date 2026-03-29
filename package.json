@@ -4,7 +4,7 @@
 
  "productName": "Trassa",
 
- "version": "1.0.23",
+ "version": "1.0.24",
 
  "description": "Trassa desktop app",
 
@@ -69,12 +69,23 @@
   "appId": "com.myreactapp.app",
 
   "productName": "Trassa",
+  "files": [
+
+   "dist/**/*",
+
+   "electron.js",
+
+   "preload.js",
+   "node_modules/**/*"
+
+  ],
 
   "artifactName": "Trassa-${version}.exe",
 
   "icon": "build/favicon.ico",
 
   "publish": [
+    
 
    {
 
