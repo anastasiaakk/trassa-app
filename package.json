@@ -4,7 +4,7 @@
 
  "productName": "Trassa",
 
- "version": "1.0.22",
+ "version": "1.0.23",
 
  "description": "Trassa desktop app",
 
@@ -90,16 +90,7 @@
 
   ],
 
-  "files": [
 
-   "dist/**/*",
-
-   "electron.js",
-
-   "preload.js",
-   "node_modules/**/*"
-
-  ],
 
   "directories": {
 
