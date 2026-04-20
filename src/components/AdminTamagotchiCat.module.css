@@ -1,0 +1,1101 @@
+/* Весь экран — не схлопываем в 0×0: иначе fixed-дети портала могут не рисоваться */
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.petWrap {
+  position: fixed;
+  width: 72px;
+  height: 72px;
+  pointer-events: auto;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  filter: drop-shadow(2px 6px 14px rgba(45, 35, 65, 0.18));
+  transition: transform 0.28s cubic-bezier(0.33, 0.86, 0.52, 1);
+}
+
+.petWrap:active {
+  cursor: grabbing;
+}
+
+.petWrapLow {
+  filter: drop-shadow(2px 4px 8px rgba(40, 30, 60, 0.2)) saturate(0.85);
+}
+
+/* ——— «Живой» кот: плавные кривые + длиннее циклы (без рывков) ——— */
+/* cubic-bezier: мягкое ускорение/торможение, похоже на живое движение */
+
+.groundShadow {
+  transform-origin: 40px 72px;
+  transform-box: view-box;
+  animation: shadowPulse 4.2s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.catRig {
+  transform-origin: 40px 52px;
+  transform-box: view-box;
+  animation: rigIdle 4.5s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.tailGroup {
+  transform-origin: 18px 44px;
+  transform-box: view-box;
+  animation: tailSwing 3.5s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.rearGroup {
+  transform-origin: 40px 60px;
+  transform-box: view-box;
+  animation: rearShift 4.8s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.torsoGroup {
+  transform-origin: 40px 50px;
+  transform-box: view-box;
+  animation: torsoBreath 3.6s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.frontPawsGroup {
+  transform-origin: 40px 68px;
+  transform-box: view-box;
+  animation: pawsKnead 3.1s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.headGroup {
+  transform-origin: 40px 32px;
+  transform-box: view-box;
+  animation: headAlive 6s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+/* Точка поворота — центр нижней дуги уха (стык с головой) */
+.earLeft {
+  transform-origin: 28px 17.5px;
+  transform-box: view-box;
+  animation: earLeftFlick 5.5s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.earRight {
+  transform-origin: 52px 17.5px;
+  transform-box: view-box;
+  animation: earRightFlick 5.7s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.faceGroup {
+  transform-origin: 40px 30px;
+  transform-box: view-box;
+  animation: faceMicro 6.2s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.eyesGroup {
+  transform-origin: 40px 26px;
+  transform-box: view-box;
+  animation: eyeBlink 7s cubic-bezier(0.45, 0.02, 0.5, 1) infinite;
+}
+
+.whiskersGroup {
+  transform-origin: 40px 31px;
+  transform-box: view-box;
+  animation: whiskerFlutter 5.2s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.noseShape {
+  transform-origin: 40px 34px;
+  transform-box: view-box;
+  animation: noseTwitch 3.8s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.mouthLine {
+  transform-origin: 40px 40px;
+  transform-box: view-box;
+  animation: mouthWiggle 6.2s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+/* Режимы — шаг чуть медленнее, кривая без рывка */
+.petWrapWalk .catRig {
+  animation: rigWalk 0.85s cubic-bezier(0.38, 0.02, 0.48, 1) infinite;
+}
+
+.petWrapWalk .tailGroup {
+  animation: tailRun 0.72s cubic-bezier(0.38, 0.02, 0.48, 1) infinite;
+}
+
+.petWrapWalk .rearGroup {
+  animation: rearWalk 0.8s cubic-bezier(0.38, 0.02, 0.48, 1) infinite;
+}
+
+.petWrapWalk .torsoGroup {
+  animation: torsoWalk 0.76s cubic-bezier(0.38, 0.02, 0.48, 1) infinite;
+}
+
+.petWrapWalk .frontPawsGroup {
+  animation: pawsStep 0.68s cubic-bezier(0.38, 0.02, 0.48, 1) infinite;
+}
+
+.petWrapWalk .headGroup {
+  animation: headWalk 0.85s cubic-bezier(0.38, 0.02, 0.48, 1) infinite;
+}
+
+.petWrapDrag .catRig {
+  animation: dragBob 0.68s cubic-bezier(0.4, 0.02, 0.5, 1) infinite;
+}
+
+.petWrapDrag .tailGroup {
+  animation: tailDrag 0.6s cubic-bezier(0.4, 0.02, 0.5, 1) infinite;
+}
+
+.petWrapDrag .headGroup {
+  animation: headDrag 0.75s cubic-bezier(0.4, 0.02, 0.5, 1) infinite;
+}
+
+.petWrapHungry .catRig {
+  animation: rigWeak 4.8s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.petWrapHungry .tailGroup {
+  animation: tailSad 4.2s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.petWrapHungry .headGroup {
+  animation: headSad 4.4s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.petWrapHungry .earLeft {
+  animation: earDroopL 4.2s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.petWrapHungry .earRight {
+  animation: earDroopR 4.4s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.petWrapHungry .eyesGroup {
+  animation: eyeBlinkTired 5.5s cubic-bezier(0.45, 0.02, 0.5, 1) infinite;
+}
+
+.petWrapPanel .headGroup {
+  animation: headPeek 2.8s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.petWrapPanel .earLeft {
+  animation: earPerkL 2.5s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.petWrapPanel .earRight {
+  animation: earPerkR 2.55s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.petWrapThink .headGroup {
+  animation: headThink 1.55s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.petWrapThink .earLeft {
+  animation: earThinkL 1.45s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.petWrapThink .earRight {
+  animation: earThinkR 1.45s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.petWrapHappy .tailGroup {
+  animation: tailJoy 1.45s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.petWrapHappy .catRig {
+  animation: rigJoy 2.7s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.petWrapHappy .earLeft {
+  animation: earHappyL 1.05s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.petWrapHappy .earRight {
+  animation: earHappyR 1.08s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.petWrapHappy .eyesGroup {
+  animation: eyeSparkle 3.8s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.petWrapHappy .mouthLine {
+  animation: mouthSmile 2.3s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+/* Одновременные режимы */
+.petWrapWalk.petWrapHappy .catRig {
+  animation: rigWalkJoy 0.82s cubic-bezier(0.38, 0.02, 0.48, 1) infinite;
+}
+
+.petWrapWalk.petWrapHungry .catRig {
+  animation: rigWalkWeak 0.92s cubic-bezier(0.38, 0.02, 0.48, 1) infinite;
+}
+
+@keyframes rigWalkJoy {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  22% {
+    transform: translateY(-1.6px) rotate(0.35deg);
+  }
+  45% {
+    transform: translateY(-2.5px) rotate(0.52deg);
+  }
+  68% {
+    transform: translateY(-1.1px) rotate(-0.28deg);
+  }
+  85% {
+    transform: translateY(-2.1px) rotate(0.38deg);
+  }
+}
+
+@keyframes rigWalkWeak {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-0.9px) rotate(-0.12deg);
+  }
+  66% {
+    transform: translateY(-1.3px) rotate(-0.22deg);
+  }
+}
+
+@keyframes shadowPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 0.92;
+  }
+}
+
+@keyframes rigIdle {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-0.22deg);
+  }
+  20% {
+    transform: translateY(-0.65px) rotate(0.15deg);
+  }
+  40% {
+    transform: translateY(-1.15px) rotate(0.42deg);
+  }
+  60% {
+    transform: translateY(-1.35px) rotate(0.52deg);
+  }
+  80% {
+    transform: translateY(-0.55px) rotate(0.1deg);
+  }
+}
+
+@keyframes rigWalk {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  20% {
+    transform: translateY(-1.4px) rotate(0.28deg);
+  }
+  40% {
+    transform: translateY(-2.2px) rotate(0.48deg);
+  }
+  60% {
+    transform: translateY(-1px) rotate(-0.22deg);
+  }
+  80% {
+    transform: translateY(-1.9px) rotate(0.32deg);
+  }
+}
+
+@keyframes rigWeak {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-0.45px) rotate(-0.2deg);
+  }
+}
+
+@keyframes rigJoy {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  12% {
+    transform: translateY(-1px) rotate(-0.2deg);
+  }
+  25% {
+    transform: translateY(-1.6px) rotate(-0.35deg);
+  }
+  40% {
+    transform: translateY(-2.4px) rotate(0.55deg);
+  }
+  55% {
+    transform: translateY(-1.2px) rotate(-0.15deg);
+  }
+  72% {
+    transform: translateY(-2px) rotate(0.42deg);
+  }
+  88% {
+    transform: translateY(-0.6px) rotate(0.1deg);
+  }
+}
+
+@keyframes tailSwing {
+  0%,
+  100% {
+    transform: rotate(-4deg);
+  }
+  33% {
+    transform: rotate(2deg);
+  }
+  66% {
+    transform: rotate(6.5deg);
+  }
+}
+
+@keyframes tailRun {
+  0%,
+  100% {
+    transform: rotate(-9deg);
+  }
+  33% {
+    transform: rotate(4deg);
+  }
+  66% {
+    transform: rotate(14deg);
+  }
+}
+
+@keyframes tailJoy {
+  0%,
+  100% {
+    transform: rotate(-12deg);
+  }
+  25% {
+    transform: rotate(18deg);
+  }
+  75% {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes tailSad {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes tailDrag {
+  0%,
+  100% {
+    transform: rotate(-6deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes rearShift {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(0.6px);
+  }
+}
+
+@keyframes rearWalk {
+  0%,
+  100% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(1px) translateY(-0.8px);
+  }
+}
+
+@keyframes torsoBreath {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.018);
+  }
+}
+
+@keyframes torsoWalk {
+  0%,
+  100% {
+    transform: scale(1) skewX(0deg);
+  }
+  50% {
+    transform: scale(1.02) skewX(-1deg);
+  }
+}
+
+@keyframes pawsKnead {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(0.8px);
+  }
+  70% {
+    transform: translateY(-0.4px);
+  }
+}
+
+@keyframes pawsStep {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-1.6px);
+  }
+  75% {
+    transform: translateY(0.6px);
+  }
+}
+
+@keyframes headAlive {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  35% {
+    transform: rotate(1.2deg);
+  }
+  70% {
+    transform: rotate(-0.8deg);
+  }
+}
+
+@keyframes headWalk {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-1px) rotate(1.5deg);
+  }
+}
+
+@keyframes headSad {
+  0%,
+  100% {
+    transform: rotate(-2.5deg);
+  }
+  50% {
+    transform: rotate(-4deg);
+  }
+}
+
+@keyframes headPeek {
+  0%,
+  100% {
+    transform: rotate(2deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes headThink {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes headDrag {
+  0%,
+  100% {
+    transform: rotate(-1deg);
+  }
+  50% {
+    transform: rotate(1.5deg);
+  }
+}
+
+@keyframes earLeftFlick {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  35% {
+    transform: rotate(-1.8deg);
+  }
+  70% {
+    transform: rotate(1deg);
+  }
+}
+
+@keyframes earRightFlick {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  38% {
+    transform: rotate(1.8deg);
+  }
+  72% {
+    transform: rotate(-1deg);
+  }
+}
+
+@keyframes earDroopL {
+  0%,
+  100% {
+    transform: rotate(-2.5deg);
+  }
+  50% {
+    transform: rotate(-4deg);
+  }
+}
+
+@keyframes earDroopR {
+  0%,
+  100% {
+    transform: rotate(2.5deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
+}
+
+@keyframes earPerkL {
+  0%,
+  100% {
+    transform: rotate(-1deg);
+  }
+  50% {
+    transform: rotate(-3.5deg);
+  }
+}
+
+@keyframes earPerkR {
+  0%,
+  100% {
+    transform: rotate(1deg);
+  }
+  50% {
+    transform: rotate(3.5deg);
+  }
+}
+
+@keyframes earThinkL {
+  0%,
+  100% {
+    transform: rotate(-0.4deg);
+  }
+  50% {
+    transform: rotate(-2deg);
+  }
+}
+
+@keyframes earThinkR {
+  0%,
+  100% {
+    transform: rotate(0.4deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}
+
+@keyframes earHappyL {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(-5deg);
+  }
+}
+
+@keyframes earHappyR {
+  0%,
+  100% {
+    transform: rotate(2deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes faceMicro {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(0.4px);
+  }
+}
+
+@keyframes eyeBlink {
+  0%,
+  40%,
+  100% {
+    transform: scaleY(1);
+  }
+  42% {
+    transform: scaleY(0.55);
+  }
+  45% {
+    transform: scaleY(0.1);
+  }
+  48% {
+    transform: scaleY(0.55);
+  }
+  51% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes eyeBlinkTired {
+  0%,
+  36%,
+  100% {
+    transform: scaleY(1);
+  }
+  38% {
+    transform: scaleY(0.65);
+  }
+  40% {
+    transform: scaleY(0.18);
+  }
+  42% {
+    transform: scaleY(0.65);
+  }
+  44% {
+    transform: scaleY(1);
+  }
+  48% {
+    transform: scaleY(0.7);
+  }
+  50% {
+    transform: scaleY(0.22);
+  }
+  52% {
+    transform: scaleY(0.7);
+  }
+  54% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes eyeSparkle {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+}
+
+@keyframes whiskerFlutter {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(0.8deg);
+  }
+  75% {
+    transform: rotate(-0.6deg);
+  }
+}
+
+@keyframes noseTwitch {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(0.35px);
+  }
+  60% {
+    transform: translateY(-0.2px);
+  }
+}
+
+@keyframes mouthWiggle {
+  0%,
+  100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(1.04);
+  }
+}
+
+@keyframes mouthSmile {
+  0%,
+  100% {
+    transform: scaleX(1) translateY(0);
+  }
+  50% {
+    transform: scaleX(1.08) translateY(-0.5px);
+  }
+}
+
+@keyframes dragBob {
+  0%,
+  100% {
+    transform: translateY(-0.6px) rotate(-0.28deg) scale(1.015);
+  }
+  50% {
+    transform: translateY(0.35px) rotate(0.28deg) scale(1.022);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .groundShadow,
+  .catRig,
+  .tailGroup,
+  .rearGroup,
+  .torsoGroup,
+  .frontPawsGroup,
+  .headGroup,
+  .earLeft,
+  .earRight,
+  .faceGroup,
+  .eyesGroup,
+  .whiskersGroup,
+  .noseShape,
+  .mouthLine,
+  .openBtn {
+    animation: none !important;
+  }
+}
+
+.catSvg {
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 2px 3px rgba(50, 40, 70, 0.12));
+}
+
+.faceRight {
+  transform: scaleX(1);
+}
+
+.faceLeft {
+  transform: scaleX(-1);
+}
+
+.bubbleHint {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translateX(-50%);
+  margin-bottom: 6px;
+  padding: 4px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.92);
+  color: #6b4a78;
+  border: 1px solid rgba(200, 170, 220, 0.5);
+  box-shadow: 0 2px 8px rgba(80, 60, 100, 0.12);
+  pointer-events: none;
+}
+
+.miniBar {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  bottom: 2px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.miniBarFill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #f59e0b, #84cc16);
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.openBtn {
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  background: linear-gradient(145deg, #fff, #f3e8ff);
+  box-shadow:
+    2px 2px 6px rgba(120, 100, 140, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  color: #7a5a90;
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+  animation: btnFloat 3.4s cubic-bezier(0.42, 0.02, 0.55, 1) infinite;
+}
+
+.openBtn:hover {
+  filter: brightness(1.02);
+}
+
+@keyframes btnFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-1.2px);
+  }
+  70% {
+    transform: translateY(-2px);
+  }
+}
+
+.panel {
+  position: fixed;
+  z-index: 10051;
+  right: 16px;
+  bottom: 100px;
+  width: min(380px, calc(100vw - 32px));
+  max-height: min(560px, calc(100vh - 120px));
+  display: flex;
+  flex-direction: column;
+  border-radius: 22px;
+  background: linear-gradient(165deg, #fffafd 0%, #f5ecfa 100%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    12px 16px 40px rgba(90, 70, 120, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+.panelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.7), rgba(240, 228, 250, 0.95));
+  border-bottom: 1px solid rgba(180, 150, 200, 0.2);
+}
+
+.panelTitle {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #4a3558;
+}
+
+.panelClose {
+  border: none;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #7a5a88;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.panelClose:hover {
+  background: rgba(255, 255, 255, 0.88);
+  color: #5c4a68;
+}
+
+.panelBody {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.statRow {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #6b5578;
+}
+
+.barLabel {
+  flex: 1 1 140px;
+}
+
+.barTrack {
+  height: 8px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.25s ease;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.btn {
+  border: none;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  background: linear-gradient(145deg, #e8d4f8, #f5e0f0);
+  color: #4a3558;
+  box-shadow: 2px 2px 6px rgba(120, 90, 130, 0.12);
+  transition: filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn:hover {
+  filter: saturate(0.92) brightness(1.02);
+  box-shadow: 2px 2px 7px rgba(100, 95, 115, 0.1);
+}
+
+.btnPrimary {
+  background: linear-gradient(145deg, #c9a8e6, #f0b8d8);
+  color: #fff;
+}
+
+.btnPrimary:hover {
+  filter: saturate(0.9) brightness(1.03);
+}
+
+.customGrid {
+  display: grid;
+  gap: 8px;
+}
+
+.customGrid label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #5c4a68;
+}
+
+.customGrid input[type="text"] {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(160, 140, 180, 0.35);
+  font-family: inherit;
+}
+
+.customGrid input[type="color"] {
+  width: 100%;
+  height: 36px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.walkRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #5c4a68;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 8px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(200, 180, 220, 0.35);
+}
+
+.msg {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  padding: 8px 10px;
+  border-radius: 12px;
+  max-width: 100%;
+  word-break: break-word;
+}
+
+.msgUser {
+  align-self: flex-end;
+  background: linear-gradient(145deg, #ddd0f0, #e8d8f5);
+  color: #3d3050;
+}
+
+.msgAi {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(200, 190, 220, 0.4);
+  color: #3d3050;
+}
+
+.chatForm {
+  display: flex;
+  gap: 8px;
+}
+
+.chatInput {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(160, 140, 180, 0.35);
+  font-family: inherit;
+  font-size: 0.85rem;
+}
+
+.hint {
+  margin: 0;
+  font-size: 0.72rem;
+  color: #8a7898;
+  line-height: 1.4;
+}

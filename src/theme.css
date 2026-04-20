@@ -1,0 +1,105 @@
+@import url("https://fonts.googleapis.com/css2?family=Eastman:ital,wght@0,400;0,500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
+
+:root {
+  /* Figma Variables */
+
+  /* Color */
+  --accent-mahogany-light: #7a2338;
+  --brand-indigo: #243b74;
+  --neutral-surface-alt: #f0ece6;
+
+  /* Common Style Variables */
+
+  /* Color */
+  --color-darkslateblue: rgba(26, 42, 82, 0.05);
+  --color-darkslategray-100: #1c2b4a;
+  --color-darkslategray-200: rgba(28, 43, 74, 0.2);
+  --color-indianred-100: #943847;
+  --color-indianred-200: rgba(148, 56, 71, 0.2);
+  --color-indianred-300: rgba(148, 56, 71, 0.1);
+  --color-indianred: rgba(148, 56, 71, 0.2);
+  --color-slategray: #5c6b8a;
+  --color-lightgray: #cfd6e2;
+  --color-white: #fff;
+
+  /* Gap */
+  --gap-20: 20px;
+  --gap-3: 3px;
+  --gap-12: 12px;
+  --gap-15: 15px;
+  --gap-24: 24px;
+  --gap-13_5: 13.5px;
+
+  /* Padding */
+  --padding-0: 0px;
+  --padding-20: 20px;
+  --padding-01: 0;
+  --padding-32: 32px;
+  --padding-33: 33px;
+  --padding-60: 60px;
+
+  /* BorderRadius */
+  --br-8: 8px;
+  --br-9999: 9999px;
+  --br-12: 12px;
+
+  /* Font */
+  --font-eastman: Eastman;
+  --font-montserrat: 'Montserrat', sans-serif;
+
+  /* FontSize */
+  --fs-14: 14px;
+  --fs-19: 19px;
+  --fs-26: 26px;
+  --fs-32: 32px;
+  --fs-18: 18px;
+
+  /* Shadows */
+  --shadow-drop: 0px 2px 4px rgba(0, 0, 0, 0.1), 0px 4px 6px rgba(0, 0, 0, 0.1),
+    0px 0px 0px rgba(0, 0, 0, 0), 0px 0px 0px rgba(0, 0, 0, 0);
+
+  /* LineHeights */
+  --lh-12: 12px;
+  --lh-16: 16px;
+  --lh-20: 20px;
+
+  /* Borders */
+  --border-1: 1px solid var(--color-lightgray);
+
+  /* Gradients */
+  --gradient-1: linear-gradient(90deg, #fff, #f9fafb);
+  --gradient-2: linear-gradient(
+    90deg,
+    rgba(28, 43, 74, 0.05),
+    rgba(148, 56, 71, 0.05)
+  );
+  --gradient-3: linear-gradient(90deg, #943847, var(--color-darkslategray-100));
+
+  /* WidthHeights */
+  --height-24: 24px;
+  --height-26: 26px;
+  --height-48: 48px;
+  --height-60: 60px;
+  --height-80: 80px;
+  --height-272: 272px;
+  --height-274: 274px;
+  --width-24: 24px;
+  --width-48: 48px;
+  --width-262: 262px;
+  --width-286: 286px;
+  --width-350: 350px;
+  --width-352: 352px;
+
+  --left-0: 0px;
+  --left-12: 12px;
+  --left-calc50-175: calc(50% - 175px);
+  --top-0: 0px;
+  --top-12: 12px;
+  --top-calc50-136: calc(50% - 136px);
+}
+
+body {
+  margin: 0;
+  line-height: normal;
+}

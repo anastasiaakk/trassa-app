@@ -1,0 +1,22 @@
+# Пример unit для systemd (Ubuntu): API слушает только localhost, наружу — nginx.
+# Скопируйте в /etc/systemd/system/trassa-api.service, поправьте пути и пользователя.
+#
+# sudo systemctl daemon-reload
+# sudo systemctl enable --now trassa-api
+
+[Unit]
+Description=Trassa API (Node)
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/trassa/server
+Environment=NODE_ENV=production
+EnvironmentFile=/etc/trassa/api.env
+ExecStart=/usr/bin/node dist/index.js
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

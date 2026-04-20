@@ -1,0 +1,6 @@
+{
+  "startupDelayMs": 12000,
+  "checkIntervalHours": 24,
+  "remindLaterDays": 7,
+  "manifestUrl": ""
+}

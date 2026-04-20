@@ -1,0 +1,49 @@
+{
+  "name": "trassa-setup-wizard",
+  "version": "0.1.0",
+  "private": true,
+  "main": "main.cjs",
+  "scripts": {
+    "dev": "vite --port 5180",
+    "build": "node ../scripts/generate-icon-ico.cjs && node ../scripts/sync-setup-public-icon.cjs && vite build && node ../scripts/verify-setup-payload.cjs && electron-builder --win portable --publish never",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.3",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.4.1",
+    "electron": "^26.5.1",
+    "electron-builder": "^26.8.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.2"
+  },
+  "build": {
+    "appId": "com.myapp.trassa.setup",
+    "productName": "Трасса Setup",
+    "copyright": "Copyright © Трасса",
+    "directories": {
+      "output": "../release/setup-dist"
+    },
+    "asar": true,
+    "files": ["dist/**/*", "main.cjs", "preload.cjs"],
+    "extraResources": [
+      {
+        "from": "payload-app",
+        "to": "payload"
+      },
+      {
+        "from": "../electron-assets",
+        "to": "electron-assets",
+        "filter": ["icon.ico", "icon.png"]
+      }
+    ],
+    "win": {
+      "target": ["portable"],
+      "icon": "../electron-assets/icon.ico",
+      "signAndEditExecutable": false,
+      "artifactName": "Трасса Setup ${version}.exe"
+    }
+  }
+}

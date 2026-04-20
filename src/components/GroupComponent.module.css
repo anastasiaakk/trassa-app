@@ -1,0 +1,89 @@
+.rectangleParent {
+  position: relative;
+  border-radius: var(--br-12);
+  background: var(--gradient-1);
+  border: var(--border-1);
+  box-sizing: border-box;
+  width: var(--width-352);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--padding-31) var(--padding-20) 58px var(--padding-33);
+  isolation: isolate;
+  gap: var(--gap-14);
+  max-width: 100%;
+  text-align: left;
+  font-size: var(--fs-18);
+  color: var(--color-darkslategray-100);
+  font-family: var(--font-montserrat);
+}
+.rectangle {
+  width: var(--width-352);
+  height: var(--height-274);
+  position: relative;
+  border-radius: var(--br-12);
+  background: var(--gradient-1);
+  border: var(--border-1);
+  box-sizing: border-box;
+  display: none;
+  max-width: 100%;
+  z-index: 0;
+  flex-shrink: 0;
+}
+.rectangle2 {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  margin: 0 !important;
+  top: calc(50% - 136px);
+  left: calc(50% - 175px);
+  border-radius: var(--br-12);
+  background: var(--gradient-2);
+  z-index: 1;
+  flex-shrink: 0;
+}
+.rectangleGroup {
+  width: var(--width-48);
+  height: var(--height-48);
+  position: relative;
+  box-shadow: var(--shadow-drop);
+  border-radius: var(--br-8);
+  background: var(--gradient-3);
+  z-index: 2;
+  flex-shrink: 0;
+}
+.rectangle3 {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  box-shadow: var(--shadow-drop);
+  border-radius: var(--br-8);
+  background: var(--gradient-3);
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+.frameIcon {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: var(--width-24);
+  height: var(--height-24);
+  z-index: 3;
+}
+.div {
+  position: relative;
+  line-height: 140%;
+  z-index: 2;
+  flex-shrink: 0;
+}
+.div2 {
+  width: 265px;
+  position: relative;
+  font-size: var(--fs-14);
+  line-height: 140%;
+  color: var(--color-slategray);
+  display: inline-block;
+  z-index: 2;
+  flex-shrink: 0;
+}

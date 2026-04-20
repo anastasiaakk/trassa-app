@@ -1,0 +1,415 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  font-size: 14px;
+}
+
+.card {
+  transition:
+    opacity 1100ms cubic-bezier(0.2, 0.9, 0.2, 1),
+    transform 1100ms cubic-bezier(0.2, 0.9, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.cardHidden {
+  opacity: 0 !important;
+  transform: translateY(16px) !important;
+}
+
+.cardShown {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* Внешняя область: прокрутка, чтобы макет с фиксированными px не обрезался (Electron ~1280px) */
+.v2534_3986 {
+  width: 100%;
+  min-height: 100svh;
+  height: 100svh;
+  margin: 0;
+  opacity: 1;
+  position: relative;
+  /* Выше фона приложения; сплэш (App) перекрывает до размонтирования */
+  z-index: 2;
+  overflow-x: auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Холст макета: минимальная ширина как в дизайне, иначе блоки с left: 773px исчезают за overflow */
+.page1Content {
+  position: relative;
+  min-width: 1360px;
+  min-height: 100svh;
+}
+
+/* Окно Electron по умолчанию ~1280px: без масштаба «плашки» и логотип уезжают за край */
+@media (max-width: 1399px) {
+  .page1Content {
+    zoom: calc((100vw - 12px) / 1360);
+  }
+}
+
+.logoTop {
+  position: absolute;
+  top: 52px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  width: 120px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+}
+
+.logoImg {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+  filter:
+    brightness(0) invert(1)
+    drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
+}
+.v2721_111 {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  opacity: 1;
+  position: relative;
+  overflow: hidden;
+}
+.v2703_3927 {
+  width: 784px;
+  height: 100%;
+  background: none;
+  opacity: 1;
+  position: absolute;
+  top: 784px;
+  left: 0px;
+  transform: rotate(-90deg);
+  overflow: hidden;
+}
+.v2699_276 {
+  width: 873px;
+  height: 100%;
+  background: transparent;
+  opacity: 1;
+  position: absolute;
+  top: 0px;
+  left: 567px;
+  overflow: hidden;
+}
+.v2659_113 {
+  width: 582px;
+  height: 285px;
+  background: none;
+  margin: 34px;
+  opacity: 1;
+  position: absolute;
+  top: 192px;
+  left: calc(50% - 575px);
+  overflow: hidden;
+}
+.v2534_3991 {
+  width: 310px;
+  height: 38px;
+  background: rgba(255,255,255,0.12999999523162842);
+  opacity: 1;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  border: 1px solid rgba(255,255,255,1);
+  border-top-left-radius: 9999px;
+  border-top-right-radius: 9999px;
+  border-bottom-left-radius: 9999px;
+  border-bottom-right-radius: 9999px;
+  overflow: hidden;
+}
+.v2534_3994 {
+  width: 480px;
+  max-width: calc(100vw - 120px);
+  color: rgba(255,255,255,1);
+  position: absolute;
+  top: 72px;
+  left: 0px;
+  font-family: Montserrat;
+  font-weight: 400;
+  font-size: 34px;
+  line-height: 1.2;
+  opacity: 1;
+  text-align: left;
+  white-space: normal;
+  word-break: break-word;
+}
+.v2534_3995 {
+  width: 476px;
+  color: rgba(240,236,230,1);
+  position: absolute;
+  top: 241px;
+  left: 0px;
+  font-family: Montserrat;
+  font-weight: 400;
+  font-size: 16px;
+  opacity: 1;
+  text-align: left;
+}
+.v2534_3992 {
+  width: 8px;
+  height: 8px;
+  background: rgba(255,255,255,1);
+  opacity: 1;
+  position: absolute;
+  top: 15px;
+  left: 17px;
+  border: 1px solid rgba(255,255,255,1);
+  border-top-left-radius: 9999px;
+  border-top-right-radius: 9999px;
+  border-bottom-left-radius: 9999px;
+  border-bottom-right-radius: 9999px;
+  overflow: hidden;
+}
+.v2534_3993 {
+  width: 249px;
+  color: rgba(255,255,255,1);
+  position: absolute;
+  top: 11px;
+  left: 31px;
+  font-family: Montserrat;
+  font-weight: 400;
+  font-size: 12px;
+  opacity: 1;
+  text-align: left;
+}
+.v2548_4525 {
+  width: 506px;
+  height: 246px;
+  background: none;
+  margin: 20px;
+  opacity: 1;
+  position: absolute;
+  top: 232px;
+  left: calc(50% + 26px);
+  overflow: hidden;
+}
+.v2548_4526 {
+  width: 243px;
+  height: 109px;
+  background: none;
+  opacity: 1;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  overflow: hidden;
+}
+
+.v2534_4005 {
+  width: 243px;
+  height: 109px;
+  background: rgba(255,255,255,1);
+  opacity: 1;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
+  overflow: hidden;
+}
+.v2534_4006 {
+  width: 62px;
+  color: rgba(28,43,74,1);
+  position: absolute;
+  top: 27px;
+  left: 91px;
+  font-family: Montserrat;
+  font-weight: 500;
+  font-size: 32px;
+  opacity: 1;
+  text-align: center;
+}
+.v2534_4007 {
+  width: 108px;
+  color: rgba(92,107,138,1);
+  position: absolute;
+  top: 62px;
+  left: 68px;
+  font-family: Montserrat;
+  font-weight: 400;
+  font-size: 14px;
+  opacity: 1;
+  text-align: center;
+}
+.v2548_4527 {
+  width: 243px;
+  height: 109px;
+  background: none;
+  opacity: 1;
+  position: absolute;
+  top: 0px;
+  left: 263px;
+  overflow: hidden;
+}
+.v2534_4008 {
+  width: 243px;
+  height: 109px;
+  background: rgba(255,255,255,1);
+  opacity: 1;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
+  overflow: hidden;
+}
+.v2534_4009 {
+  width: 112px;
+  color: rgba(148,56,71,1);
+  position: absolute;
+  top: 27px;
+  left: 66px;
+  font-family: Montserrat;
+  font-weight: 500;
+  font-size: 32px;
+  opacity: 1;
+  text-align: center;
+}
+.v2534_4010 {
+  width: 105px;
+  color: rgba(92,107,138,1);
+  position: absolute;
+  top: 67px;
+  left: 69px;
+  font-family: Montserrat;
+  font-weight: 400;
+  font-size: 14px;
+  opacity: 1;
+  text-align: center;
+}
+.v2718_3872 {
+  width: 243px;
+  height: 109px;
+  background: none;
+  opacity: 1;
+  position: absolute;
+  top: 137px;
+  left: 0px;
+  overflow: hidden;
+}
+.v2534_4011 {
+  width: 243px;
+  height: 109px;
+  background: rgba(255,255,255,1);
+  opacity: 1;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
+  overflow: hidden;
+}
+.v2534_4012 {
+  width: 112px;
+  color: rgba(28,43,74,1);
+  position: absolute;
+  top: 28px;
+  left: 65px;
+  font-family: Montserrat;
+  font-weight: 500;
+  font-size: 32px;
+  opacity: 1;
+  text-align: center;
+}
+.v2534_4013 {
+  width: 153px;
+  color: rgba(92,107,138,1);
+  position: absolute;
+  top: 68px;
+  left: 45px;
+  font-family: Montserrat;
+  font-weight: 400;
+  font-size: 14px;
+  opacity: 1;
+  text-align: center;
+}
+.v2548_4524 {
+  width: 243px;
+  height: 109px;
+  background: none;
+  opacity: 1;
+  position: absolute;
+  top: 137px;
+  left: 263px;
+  overflow: hidden;
+}
+.v2534_4014 {
+  width: 243px;
+  height: 109px;
+  background: rgba(255,255,255,1);
+  opacity: 1;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
+  overflow: hidden;
+}
+.v2534_4015 {
+  width: 84px;
+  color: rgba(148,56,71,1);
+  position: absolute;
+  top: 27px;
+  left: 79px;
+  font-family: Montserrat;
+  font-weight: 500;
+  font-size: 32px;
+  opacity: 1;
+  text-align: center;
+}
+.v2534_4016 {
+  width: 84px;
+  color: rgba(92,107,138,1);
+  position: absolute;
+  top: 67px;
+  left: 79px;
+  font-family: Montserrat;
+  font-weight: 400;
+  font-size: 14px;
+  opacity: 1;
+  text-align: center;
+}
+.v2721_115 {
+  width: 97px;
+  height: 33px;
+  background: var(--trassa-v2721-bg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  opacity: 1;
+  position: absolute;
+  top: 46px;
+  left: 671px;
+  overflow: hidden;
+}
+.v2547_4523 {
+  width: 97px;
+  height: 33px;
+  background: linear-gradient(rgba(255,255,255,1), rgba(182,182,182,1));
+  opacity: 1;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  border: 0.5px solid linear-gradient(rgba(240,236,230,1), rgba(138,135,132,1));
+}

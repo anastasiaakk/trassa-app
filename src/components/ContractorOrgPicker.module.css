@@ -1,0 +1,81 @@
+.wrap {
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  color: #1a2a52;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.field {
+  position: relative;
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(36, 59, 116, 0.22);
+  background: #fbfcff;
+  color: #1a2a52;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.input:focus {
+  border-color: rgba(36, 59, 116, 0.45);
+  box-shadow: 0 0 0 3px rgba(36, 59, 116, 0.12);
+}
+
+.input:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 20;
+  margin: 0;
+  padding: 6px 0;
+  max-height: 220px;
+  overflow-y: auto;
+  list-style: none;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid rgba(36, 59, 116, 0.18);
+  box-shadow:
+    8px 12px 28px rgba(25, 42, 74, 0.12),
+    0 4px 12px rgba(25, 42, 74, 0.06);
+}
+
+.item {
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #1a2a52;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.item:hover,
+.itemHi {
+  background: rgba(36, 59, 116, 0.08);
+}
+
+.empty {
+  padding: 12px 14px;
+  font-size: 12px;
+  color: #6b7280;
+  cursor: default;
+}

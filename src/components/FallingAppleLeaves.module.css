@@ -1,0 +1,115 @@
+/* Лепестки внутри .app-shell__bg: над заливкой, под всем интерфейсом */
+
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.track {
+  position: absolute;
+  top: 0;
+  left: var(--left, 10%);
+  animation-name: petalDescend;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-duration: var(--dur, 28s);
+  animation-delay: var(--delay, 0s);
+}
+
+.inner {
+  display: block;
+  animation-name: petalTumble;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-duration: var(--dur, 28s);
+  animation-delay: var(--delay, 0s);
+}
+
+.petalSvg {
+  display: block;
+  width: var(--w, 22px);
+  height: var(--h, 28px);
+  color: var(--petal, #fde8f0);
+  opacity: var(--op, 0.85);
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.25));
+}
+
+.snowSvg {
+  display: block;
+  width: var(--w, 14px);
+  height: var(--h, 14px);
+  color: var(--petal, #ffffff);
+  opacity: var(--op, 0.85);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.layer[data-season="winter"] .inner {
+  animation-name: snowDrift;
+}
+
+@keyframes petalDescend {
+  0% {
+    transform: translateY(-20vh);
+  }
+  100% {
+    transform: translateY(120vh);
+  }
+}
+
+@keyframes petalTumble {
+  0% {
+    transform: translateX(0) rotate(-12deg);
+  }
+  20% {
+    transform: translateX(16px) rotate(48deg);
+  }
+  40% {
+    transform: translateX(-12px) rotate(130deg);
+  }
+  60% {
+    transform: translateX(18px) rotate(230deg);
+  }
+  80% {
+    transform: translateX(-8px) rotate(310deg);
+  }
+  100% {
+    transform: translateX(6px) rotate(400deg);
+  }
+}
+
+@keyframes snowDrift {
+  0% {
+    transform: translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateX(10px) rotate(90deg);
+  }
+  50% {
+    transform: translateX(-8px) rotate(180deg);
+  }
+  75% {
+    transform: translateX(6px) rotate(270deg);
+  }
+  100% {
+    transform: translateX(0) rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track,
+  .inner {
+    animation: none !important;
+  }
+
+  .track {
+    transform: translateY(45vh);
+    opacity: 0.35;
+  }
+
+  .layer[data-season="winter"] .track {
+    opacity: 0.4;
+  }
+}

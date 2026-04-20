@@ -1,0 +1,166 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500&display=swap");
+
+body {
+  margin: 0;
+  line-height: normal;
+  /* фон html/body — в App.css (неоморфная рамка), здесь не переопределяем */
+  color: white;
+  font-family: Montserrat, sans-serif;
+}
+:root {
+  /* Common Style Variables */
+
+  /* Color */
+  --color-darkslateblue: rgba(26, 42, 82, 0.05);
+  --color-darkslategray-100: #1c2b4a;
+  --color-darkslategray-200: rgba(28, 43, 74, 0.2);
+  --color-indianred: rgba(148, 56, 71, 0.2);
+  --color-lightgray: #cfd6e2;
+  --color-slategray: #5c6b8a;
+
+  /* Gap */
+  --gap-14: 14px;
+
+  /* Padding */
+  --padding-0: 0px;
+  --padding-20: 20px;
+  --padding-31: 31px;
+  --padding-33: 33px;
+
+  /* BorderRadius */
+  --br-8: 8px;
+  --br-12: 12px;
+
+  /* Font */
+  --font-montserrat: Montserrat;
+
+  /* FontSize */
+  --fs-14: 14px;
+  --fs-18: 18px;
+
+  /* Borders */
+  --border-1: 1px solid var(--color-lightgray);
+
+  /* Shadows */
+  --shadow-drop: 0px 4px 6px rgba(0, 0, 0, 0.1),
+    0px 10px 15px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0),
+    0px 0px 0px rgba(0, 0, 0, 0);
+
+  /* Gradients */
+  --gradient-1: linear-gradient(90deg, #fff, #f9fafb);
+  --gradient-2: linear-gradient(
+    90deg,
+    rgba(28, 43, 74, 0.05),
+    rgba(148, 56, 71, 0.05)
+  );
+  --gradient-3: linear-gradient(90deg, #943847, var(--color-darkslategray-100));
+
+  /* WidthHeights */
+  --height-24: 24px;
+  --height-48: 48px;
+  --height-274: 274px;
+  --width-24: 24px;
+  --width-48: 48px;
+  --width-352: 352px;
+
+  --left-0: 0px;
+  --left-12: 12px;
+  --left-calc50-175: calc(50% - 175px);
+  --top-0: 0px;
+  --top-12: 12px;
+  --top-calc50-136: calc(50% - 136px);
+}
+
+/* Резерв; основной фон — page1SurfaceStyle + page1-bg.png (public/) */
+.page1-flow-bg,
+.page1-screen-bg {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+  background-color: #0f1629;
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(26, 42, 82, 0.35) 0%,
+      rgba(26, 42, 82, 0.1) 45%,
+      rgba(86, 6, 29, 0.15) 100%
+    ),
+    var(--trassa-page1-bg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover, cover;
+  position: relative;
+}
+
+html {
+  /* Чтобы при появлении скролла не сдвигалась ширина и хедер */
+  scrollbar-gutter: stable;
+}
+
+/* Лишний мигающий текстовый курсор на фоне (Chromium: «caret browsing» / фокус документа).
+   На корне скрываем; в полях ввода и contenteditable — обычный курсор. */
+html,
+body,
+#root {
+  caret-color: transparent;
+  /* Текстовый курсор мыши (I-beam) только у полей ввода, не на пустых зонах страницы */
+  cursor: default;
+}
+
+input,
+textarea,
+select,
+[contenteditable="true"],
+[contenteditable=""] {
+  caret-color: auto;
+  cursor: text;
+}
+
+/* Неинтерактивный ввод текста: каретка не нужна (режим caret browsing / лишний фокус). */
+button,
+a,
+summary,
+[role="button"],
+[role="menuitem"],
+[role="tab"],
+[role="switch"] {
+  caret-color: transparent;
+  cursor: pointer;
+}
+
+label[for],
+label:has(input) {
+  caret-color: transparent;
+  cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+/* Всплывающие подсказки — только для чтения, без выделения и каретки */
+[role="tooltip"],
+[role="tooltip"] * {
+  caret-color: transparent !important;
+  user-select: none !important;
+}
+
+/* Декоративный текст в SVG (напр. Т-бот) не должен вести себя как редактируемый. */
+svg {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+@keyframes hover-tooltip-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

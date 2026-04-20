@@ -1,0 +1,110 @@
+{
+  "browserslist": {
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ]
+  },
+  "main": "electron.js",
+  "dependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^29.5.14",
+    "@types/react": "^19.2.3",
+    "@types/react-dom": "^19.2.3",
+    "leaflet": "^1.9.4",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-router-dom": "^7.5.0",
+    "typescript": "^5.8.3",
+    "web-vitals": "^4.2.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.25.1",
+    "@types/leaflet": "^1.9.21",
+    "@types/node": "^22.13.5",
+    "@typescript-eslint/eslint-plugin": "^8.30.1",
+    "@typescript-eslint/parser": "^8.30.1",
+    "@vitejs/plugin-react": "^4.4.1",
+    "concurrently": "^9.1.2",
+    "electron": "^26.5.1",
+    "electron-builder": "^26.8.1",
+    "eslint": "^9.25.1",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "kill-port": "^2.0.1",
+    "png-to-ico": "^3.0.1",
+    "rcedit": "^5.0.2",
+    "sharp": "^0.34.5",
+    "typescript-eslint": "^8.30.1",
+    "vite": "^6.3.2"
+  },
+  "build": {
+    "appId": "com.myapp.id",
+    "productName": "Трасса",
+    "directories": {
+      "output": "packaged-app"
+    },
+    "asar": false,
+    "files": [
+      "dist/**/*",
+      "electron.js",
+      "preload.js",
+      "package.json",
+      "electron-assets/icon.png",
+      "electron-assets/icon.ico",
+      "electron-assets/update.json",
+      "electron-update-check.cjs"
+    ],
+    "extraResources": [
+      {
+        "from": "server/dist",
+        "to": "trassa-api/dist"
+      },
+      {
+        "from": "server/package.json",
+        "to": "trassa-api/package.json"
+      },
+      {
+        "from": "server/node_modules",
+        "to": "trassa-api/node_modules"
+      }
+    ],
+    "win": {
+      "target": "dir",
+      "icon": "electron-assets/icon.ico",
+      "signAndEditExecutable": false
+    }
+  },
+  "eslintConfig": {
+    "root": true
+  },
+  "name": "trassa-app",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "dev:all": "kill-port 4000 && concurrently -k \"npm run dev --prefix server\" \"npm run dev\" --names \"API,WEB\" --prefix-colors \"cyan,magenta\"",
+    "build": "node scripts/ensure-public-assets.cjs && node scripts/apply-release-config.cjs && tsc && vite build",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "start": "vite",
+    "electron:dev": "electron .",
+    "server:proddeps": "node scripts/server-proddeps.cjs",
+    "server:restoredeps": "npm install --prefix server",
+    "icons:ico": "node scripts/generate-icon-ico.cjs",
+    "release:prune": "node scripts/prune-release.cjs",
+    "electron:build": "node scripts/ensure-public-assets.cjs && node scripts/generate-icon-ico.cjs && node scripts/apply-release-config.cjs && tsc && vite build && npm run server:restoredeps && npm run build --prefix server && npm run server:proddeps && node scripts/clean-release-win-unpacked.cjs && electron-builder --win dir --publish never && node scripts/embed-win-icon.cjs && node scripts/build-neo-setup.cjs && node scripts/sync-setup-download.cjs && npm run server:restoredeps",
+    "dist": "electron-builder",
+    "server:dev": "npm run dev --prefix server",
+    "server:install": "npm install --prefix server"
+  },
+  "version": "0.1.0"
+}
