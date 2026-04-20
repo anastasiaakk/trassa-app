@@ -51,14 +51,17 @@ jobs:
           $v = $pkg.version
           $tag = "v$v"
           echo "version_tag=$tag" >> $env:GITHUB_OUTPUT
-          gh release view $tag 2>$null
-          if ($LASTEXITCODE -eq 0) {
+          # gh возвращает 1, если релиза нет — без явного exit 0 шаг падает в pwsh на GHA
+          gh release view $tag *> $null
+          $hasRelease = $LASTEXITCODE -eq 0
+          if ($hasRelease) {
             echo "run=false" >> $env:GITHUB_OUTPUT
             Write-Host "::notice::Релиз $tag уже есть — пропуск (поднимите version в package.json для нового выпуска)."
           } else {
             echo "run=true" >> $env:GITHUB_OUTPUT
             Write-Host "Релиза $tag ещё нет — будет сборка и публикация."
           }
+          exit 0
 
       - name: Setup Node.js
         if: steps.gate.outputs.run == 'true'
@@ -123,10 +126,12 @@ jobs:
           $pkg = Get-Content package.json -Raw | ConvertFrom-Json
           $tag = "v$($pkg.version)"
           # Если релиз уже есть (гонка или повтор), не падать
-          gh release view $tag 2>$null
-          if ($LASTEXITCODE -eq 0) {
+          gh release view $tag *> $null
+          $hasRelease = $LASTEXITCODE -eq 0
+          if ($hasRelease) {
             Write-Host "::notice::Релиз $tag уже существует — только загружаем файлы."
             gh release upload $tag "trassa-setup.exe" "app-update.json" --clobber
-            exit 0
+            exit $LASTEXITCODE
           }
           gh release create $tag --title "Трасса $tag" --target "${{ github.sha }}" --generate-notes "trassa-setup.exe" "app-update.json"
+          exit $LASTEXITCODE
