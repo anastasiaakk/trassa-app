@@ -17,6 +17,30 @@ const unpacked = path.join(root, "packaged-app", "win-unpacked");
 const payloadDest = path.join(root, "setup-wizard", "payload-app");
 const setupDir = path.join(root, "setup-wizard");
 
+function runChecked(command, options) {
+  try {
+    execSync(command, { stdio: "inherit", shell: true, ...options });
+  } catch (error) {
+    console.error(`[build-neo-setup] команда завершилась ошибкой: ${command}`);
+    if (typeof error?.status === "number") {
+      console.error("[build-neo-setup] exit code:", error.status);
+    }
+    if (error?.stdout) {
+      const stdout = String(error.stdout).trim();
+      if (stdout) {
+        console.error("[build-neo-setup] captured stdout:\n" + stdout);
+      }
+    }
+    if (error?.stderr) {
+      const stderr = String(error.stderr).trim();
+      if (stderr) {
+        console.error("[build-neo-setup] captured stderr:\n" + stderr);
+      }
+    }
+    throw error;
+  }
+}
+
 if (!fs.existsSync(unpacked)) {
   console.error("Ошибка: нет packaged-app/win-unpacked. Сначала выполните: electron-builder --win dir");
   process.exit(1);
@@ -28,11 +52,11 @@ console.log("[build-neo-setup] payload-app ← win-unpacked");
 
 if (!fs.existsSync(path.join(setupDir, "node_modules"))) {
   console.log("[build-neo-setup] npm install в setup-wizard…");
-  execSync("npm install", { cwd: setupDir, stdio: "inherit", shell: true });
+  runChecked("npm install", { cwd: setupDir });
 }
 
 console.log("[build-neo-setup] запуск: npm run build (vite + electron-builder portable)…");
-execSync("npm run build", { cwd: setupDir, stdio: "inherit", shell: true });
+runChecked("npm run build", { cwd: setupDir });
 
 const setupDist = path.join(root, "release", "setup-dist");
 const releaseRoot = path.join(root, "release");
