@@ -1,24 +1,28 @@
-# Сборка установщика Windows и публикация GitHub Release для автообновления приложения.
+# Сборка установщика Windows и GitHub Release для автообновления.
 #
-# Как пользоваться:
-# 1. Создайте репозиторий на GitHub и залейте этот проект (ветка main).
-# 2. В package.json увеличьте "version" (например 0.2.0).
-# 3. Создайте тег и отправьте его:
-#    git tag v0.2.0
-#    git push origin v0.2.0
-# После workflow в Releases появятся trassa-setup.exe и app-update.json.
-# Ссылка .../releases/latest/download/app-update.json всегда указывает на последний релиз.
+# Автоматически при пуше в main: если для версии из package.json ещё НЕТ релиза —
+# собирается установщик и создаётся Release (тег v* создаётся сам через gh).
+#
+# Вручную: тег v* по-прежнему запускает сборку; workflow_dispatch — только артефакт, без Release.
+#
+# Что делать вам: поднимите "version" в package.json → commit → push в main.
 
 name: Release Windows
 
 on:
   push:
+    branches:
+      - main
     tags:
       - "v*"
   workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: release-windows-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-and-release:
@@ -31,7 +35,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Нужна ли сборка (релиз для этой версии уже есть?)
+        id: gate
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+            echo "run=true" >> $env:GITHUB_OUTPUT
+            echo "Ручной запуск — всегда собираем (артефакт без Release)."
+            exit 0
+          }
+          $v = node -p "require('./package.json').version"
+          $tag = "v$v"
+          echo "version_tag=$tag" >> $env:GITHUB_OUTPUT
+          gh release view $tag 2>$null
+          if ($LASTEXITCODE -eq 0) {
+            echo "run=false" >> $env:GITHUB_OUTPUT
+            Write-Host "::notice::Релиз $tag уже есть — пропуск (поднимите version в package.json для нового выпуска)."
+          } else {
+            echo "run=true" >> $env:GITHUB_OUTPUT
+            Write-Host "Релиза $tag ещё нет — будет сборка и публикация."
+          }
+
       - name: Setup Node.js
+        if: steps.gate.outputs.run == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -39,18 +67,23 @@ jobs:
           cache-dependency-path: package-lock.json
 
       - name: Install dependencies (root)
+        if: steps.gate.outputs.run == 'true'
         run: npm ci
 
       - name: Install dependencies (server)
+        if: steps.gate.outputs.run == 'true'
         run: npm ci --prefix server
 
       - name: Install dependencies (setup-wizard)
+        if: steps.gate.outputs.run == 'true'
         run: npm ci --prefix setup-wizard
 
       - name: Build installer (electron:build)
+        if: steps.gate.outputs.run == 'true'
         run: npm run electron:build
 
       - name: Prepare release files
+        if: steps.gate.outputs.run == 'true'
         shell: pwsh
         run: |
           $pkg = Get-Content package.json -Raw | ConvertFrom-Json
@@ -71,7 +104,7 @@ jobs:
           Write-Host "Prepared trassa-setup.exe and app-update.json for version $v"
 
       - name: Upload build artifact (ручной запуск)
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' && steps.gate.outputs.run == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: trassa-windows-release
@@ -80,10 +113,11 @@ jobs:
             app-update.json
 
       - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
+        if: steps.gate.outputs.run == 'true' && github.event_name != 'workflow_dispatch'
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          $tag = "${{ github.ref_name }}"
-          gh release create $tag --title "Трасса $tag" --verify-tag --generate-notes "trassa-setup.exe" "app-update.json"
+          $tag = node -p "require('./package.json').version"
+          $tag = "v$tag"
+          gh release create $tag --title "Трасса $tag" --target "${{ github.sha }}" --generate-notes "trassa-setup.exe" "app-update.json"
