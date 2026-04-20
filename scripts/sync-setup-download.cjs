@@ -8,7 +8,7 @@ const path = require("path");
 const root = path.join(__dirname, "..");
 const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
 const version = pkg.version;
-const src = path.join(root, "release", `Трасса Setup ${version}.exe`);
+const src = path.join(root, "release", `trassa-setup-${version}.exe`);
 const fileName = "trassa-setup.exe";
 
 function main() {

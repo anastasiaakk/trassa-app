@@ -1,6 +1,6 @@
 /**
  * Копирует packaged-app/win-unpacked → setup-wizard/payload-app и собирает неоморфный установщик
- * (release/Трасса Setup 0.1.0.exe).
+ * (release/trassa-setup-<version>.exe).
  */
 /* Без подписи: иначе electron-builder на Windows ищет сертификат и падает с кодом 1 (часто на portable). */
 if (process.env.CSC_IDENTITY_AUTO_DISCOVERY === undefined) {
@@ -63,7 +63,7 @@ const releaseRoot = path.join(root, "release");
 const pkgVersion = JSON.parse(
   fs.readFileSync(path.join(root, "package.json"), "utf8")
 ).version;
-const expectedExe = `Трасса Setup ${pkgVersion}.exe`;
+const expectedExe = `trassa-setup-${pkgVersion}.exe`;
 
 const exes = fs.existsSync(setupDist)
   ? fs.readdirSync(setupDist).filter((f) => f.endsWith(".exe"))
