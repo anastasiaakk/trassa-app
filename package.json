@@ -103,7 +103,8 @@
     "electron:build": "node scripts/ensure-public-assets.cjs && node scripts/generate-icon-ico.cjs && node scripts/apply-release-config.cjs && tsc && vite build && npm run server:restoredeps && npm run build --prefix server && npm run server:proddeps && node scripts/clean-release-win-unpacked.cjs && electron-builder --win dir --publish never && node scripts/embed-win-icon.cjs && node scripts/build-neo-setup.cjs && node scripts/sync-setup-download.cjs && npm run server:restoredeps",
     "dist": "electron-builder",
     "server:dev": "npm run dev --prefix server",
-    "server:install": "npm install --prefix server"
+    "server:install": "npm install --prefix server",
+    "dev:all": "concurrently -k \"npm run server:dev\" \"npm run dev\""
   },
   "version": "0.1.1"
 }

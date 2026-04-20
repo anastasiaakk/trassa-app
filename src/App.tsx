@@ -214,7 +214,7 @@ function App() {
       <div className="app-shell">
         <div className="app-shell__bg" aria-hidden>
           <div className="app-shell__bgFill" />
-          <SeasonBackgroundLayer />
+          {pathname === "/services" ? <SeasonBackgroundLayer /> : null}
         </div>
         <div className="app-shell__main">
           <Suspense fallback={null}>

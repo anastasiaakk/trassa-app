@@ -9,6 +9,8 @@ import {
   resetPasswordForEmail,
   type LocalUserRecord,
 } from "../utils/localAuth";
+import { authListUsers } from "../api/authApi";
+import { isAuthApiEnabled } from "../utils/authMode";
 import {
   getAdminCabinetInfo,
   getAdminSessionEmail,
@@ -69,10 +71,11 @@ export default function AdminDashboard({
   onLogout,
   useParentPageBackground = false,
 }: Props) {
+  const authApiMode = isAuthApiEnabled();
   const adminEmail = useMemo(() => getAdminSessionEmail(), []);
   const cabinet = useMemo(() => getAdminCabinetInfo(adminEmail), [adminEmail]);
   const [users, setUsers] = useState<LocalUserRecord[]>(() =>
-    listRegisteredUsers()
+    authApiMode ? [] : listRegisteredUsers()
   );
   const [maintenance, setMaintenance] = useState(loadMaintenanceState);
   const [seasonBg, setSeasonBg] = useState<SeasonMode>(loadSeasonBackground);
@@ -102,8 +105,28 @@ export default function AdminDashboard({
   }, []);
 
   const refreshUsers = useCallback(() => {
+    if (authApiMode) {
+      void authListUsers().then((r) => {
+        if (!r.ok) {
+          setDataMessage(`Не удалось загрузить пользователей с сервера: ${r.error}`);
+          return;
+        }
+        const mapped: LocalUserRecord[] = r.users.map((u) => ({
+          emailNorm: u.emailNorm,
+          passwordHash: "",
+          profile: u.profile,
+          createdAt: u.createdAt,
+        }));
+        setUsers(mapped);
+      });
+      return;
+    }
     setUsers(listRegisteredUsers());
-  }, []);
+  }, [authApiMode]);
+
+  useEffect(() => {
+    refreshUsers();
+  }, [refreshUsers]);
 
   const deleteUser = useCallback(
     (u: LocalUserRecord) => {
@@ -489,10 +512,16 @@ export default function AdminDashboard({
           </button>
           {usersOpen ? (
             <div className={styles.collapseBody}>
-          {legacy ? (
+          {legacy && !authApiMode ? (
             <p className={styles.hint}>
               Зарегистрированных пользователей пока нет — на странице входа
               допускается прежний демо-вход с любым логином и паролем.
+            </p>
+          ) : null}
+          {authApiMode ? (
+            <p className={styles.hint}>
+              Список пользователей загружается с сервера. Изменение профиля, удаление и сброс пароля выполняются
+              на серверной стороне и в этой версии админ-панели недоступны.
             </p>
           ) : null}
           <div className={styles.tableWrap}>
@@ -514,31 +543,37 @@ export default function AdminDashboard({
                     </td>
                     <td>{u.profile.roleLabel}</td>
                     <td>
-                      <button
-                        type="button"
-                        className={styles.btnSmall}
-                        onClick={() => openEdit(u)}
-                      >
-                        Править
-                      </button>{" "}
-                      <button
-                        type="button"
-                        className={styles.btnSmall}
-                        onClick={() => {
-                          setPwUserEmail(u.emailNorm);
-                          setPwMessage(null);
-                          setNewUserPassword("");
-                        }}
-                      >
-                        Пароль
-                      </button>{" "}
-                      <button
-                        type="button"
-                        className={styles.btnSmallDanger}
-                        onClick={() => deleteUser(u)}
-                      >
-                        Удалить
-                      </button>
+                      {authApiMode ? (
+                        <span className={styles.hint}>Только просмотр</span>
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            className={styles.btnSmall}
+                            onClick={() => openEdit(u)}
+                          >
+                            Править
+                          </button>{" "}
+                          <button
+                            type="button"
+                            className={styles.btnSmall}
+                            onClick={() => {
+                              setPwUserEmail(u.emailNorm);
+                              setPwMessage(null);
+                              setNewUserPassword("");
+                            }}
+                          >
+                            Пароль
+                          </button>{" "}
+                          <button
+                            type="button"
+                            className={styles.btnSmallDanger}
+                            onClick={() => deleteUser(u)}
+                          >
+                            Удалить
+                          </button>
+                        </>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -546,7 +581,7 @@ export default function AdminDashboard({
             </table>
           </div>
 
-          {editing && editForm ? (
+          {!authApiMode && editing && editForm ? (
             <form className={styles.editGrid} onSubmit={saveEdit}>
               <h4 className={styles.sectionTitle} style={{ gridColumn: "1 / -1" }}>
                 Профиль: {editing.emailNorm}
@@ -642,7 +677,7 @@ export default function AdminDashboard({
             </form>
           ) : null}
 
-          {pwUserEmail ? (
+          {!authApiMode && pwUserEmail ? (
             <form className={styles.form} style={{ marginTop: 16 }} onSubmit={setUserPassword}>
               <h4 className={styles.sectionTitle}>
                 Новый пароль для {pwUserEmail}

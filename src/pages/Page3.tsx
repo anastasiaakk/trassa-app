@@ -401,6 +401,17 @@ const Page3 = () => {
     return injectImagePreloads(PAGE3_PRELOAD_IMAGES);
   }, []);
 
+  useEffect(() => {
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevDocOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevBodyOverflow;
+      document.documentElement.style.overflow = prevDocOverflow;
+    };
+  }, []);
+
   /** Убирает «висящую» каретку перед плашкой: фокус сразу в поле e-mail при открытии входа */
   useEffect(() => {
     if (!showLogin) return;
@@ -918,24 +929,18 @@ const Page3 = () => {
                       <button type="submit" className={styles.loginSubmit}>
                         Войти
                       </button>
-                      {!authApiMode ? (
-                        <button
-                          type="button"
-                          className={styles.loginForgot}
-                          onClick={() => {
-                            setAuthMode("forgot");
-                            setForgotStep("email");
-                            setForgotEmail(loginEmail.trim());
-                            setFormError(null);
-                          }}
-                        >
-                          Забыли пароль?
-                        </button>
-                      ) : (
-                        <p className={styles.loginHint} role="note">
-                          Сброс пароля при входе через сервер — по запросу администратора.
-                        </p>
-                      )}
+                      <button
+                        type="button"
+                        className={styles.loginForgot}
+                        onClick={() => {
+                          setAuthMode("forgot");
+                          setForgotStep("email");
+                          setForgotEmail(loginEmail.trim());
+                          setFormError(null);
+                        }}
+                      >
+                        Забыли пароль?
+                      </button>
                       <div className={styles.loginLinkRow}>
                         Нет аккаунта?{" "}
                         <button

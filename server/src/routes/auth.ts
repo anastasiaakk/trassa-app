@@ -187,3 +187,25 @@ authRouter.patch("/profile", requireAuth, async (req: Request, res: Response) =>
     ...(newAccessToken ? { accessToken: newAccessToken } : {}),
   });
 });
+
+authRouter.get("/users", (_req: Request, res: Response) => {
+  const rows = db
+    .prepare("SELECT email_norm, profile_json, created_at FROM users ORDER BY created_at DESC")
+    .all() as Array<{ email_norm: string; profile_json: string; created_at: string }>;
+
+  const users = rows.map((row) => {
+    let profile = defaultProfile({ email: row.email_norm });
+    try {
+      profile = parseProfile(row.profile_json);
+    } catch {
+      profile = defaultProfile({ email: row.email_norm });
+    }
+    return {
+      emailNorm: row.email_norm,
+      createdAt: row.created_at,
+      profile,
+    };
+  });
+
+  res.json({ ok: true, users });
+});

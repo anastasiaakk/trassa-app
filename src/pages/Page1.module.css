@@ -22,7 +22,7 @@ body {
   transform: translateY(0) !important;
 }
 
-/* Внешняя область: прокрутка, чтобы макет с фиксированными px не обрезался (Electron ~1280px) */
+/* Внешняя область без прокрутки страницы (по запросу UX). */
 .v2534_3986 {
   width: 100%;
   min-height: 100svh;
@@ -32,9 +32,7 @@ body {
   position: relative;
   /* Выше фона приложения; сплэш (App) перекрывает до размонтирования */
   z-index: 2;
-  overflow-x: auto;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
 }
 
 /* Холст макета: минимальная ширина как в дизайне, иначе блоки с left: 773px исчезают за overflow */

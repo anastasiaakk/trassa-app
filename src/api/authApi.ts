@@ -82,6 +82,11 @@ async function jsonFetch<T>(
 
 export type AuthOk = { ok: true; profile: ProfileSettingsData };
 export type AuthErr = { ok: false; error: string };
+export type ServerUserRecord = {
+  emailNorm: string;
+  createdAt: string;
+  profile: ProfileSettingsData;
+};
 
 export async function authRegister(
   email: string,
@@ -152,4 +157,17 @@ export async function authPatchProfile(profile: ProfileSettingsData): Promise<Au
   if (!d?.profile) return { ok: false, error: "Не удалось сохранить." };
   applyTokenFromBody(d);
   return { ok: true, profile: d.profile };
+}
+
+export async function authListUsers(): Promise<{ ok: true; users: ServerUserRecord[] } | AuthErr> {
+  const r = await jsonFetch<{ ok?: boolean; users?: ServerUserRecord[]; error?: string }>(
+    `/api/auth/users`,
+    { method: "GET" }
+  );
+  if (!r.ok) return { ok: false, error: r.error };
+  const d = r.data;
+  if (!Array.isArray(d?.users)) {
+    return { ok: false, error: d?.error ?? "Не удалось получить список пользователей." };
+  }
+  return { ok: true, users: d.users };
 }

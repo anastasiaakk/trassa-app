@@ -155,6 +155,7 @@ function LearnerCabinetDashboard({
       backgroundPosition: "center center",
     };
   }, [layoutStyles.heroCard, isDark, variant]);
+  const heroRoleIconSrc = variant === "school" ? ROLE_ICON_SCHOOL : ROLE_ICON_STUDENT;
 
   const [sharedCalendarEvents, setSharedCalendarEvents] = useState(() =>
     loadSharedCalendarEvents()
@@ -244,7 +245,14 @@ function LearnerCabinetDashboard({
                 {copy.heroTag}
               </button>
               <button type="button" style={layoutStyles.heroButton}>
-                <CabinetHomeIcon size={22} color="#243b74" />
+                <img
+                  decoding="async"
+                  src={heroRoleIconSrc}
+                  alt=""
+                  width={22}
+                  height={22}
+                  style={{ display: "block", objectFit: "contain" }}
+                />
               </button>
             </div>
             {heroDisplayName ? (

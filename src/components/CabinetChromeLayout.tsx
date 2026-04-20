@@ -153,6 +153,7 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
     typeof window !== "undefined" ? scanMessengerInboxUnread(readMessengerSeenAt()) : false
   );
   const [messengerMountKey, setMessengerMountKey] = useState(0);
+  const messengerEnabled = cabinetPath !== "/cabinet-school" && cabinetPath !== "/cabinet-spo";
 
   const isDark = theme === "dark";
 
@@ -202,24 +203,30 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
   }, [styles.pageBg]);
 
   const recalcMessengerBadge = useCallback(() => {
+    if (!messengerEnabled) {
+      setMessengerHasUnread(false);
+      return;
+    }
     if (cabinetSection === "messenger") {
       setMessengerHasUnread(false);
       return;
     }
     setMessengerHasUnread(scanMessengerInboxUnread(messengerSeenAt));
-  }, [cabinetSection, messengerSeenAt]);
+  }, [cabinetSection, messengerSeenAt, messengerEnabled]);
 
   useEffect(() => {
     recalcMessengerBadge();
   }, [recalcMessengerBadge]);
 
   useEffect(() => {
+    if (!messengerEnabled) return;
     const onUpd = () => recalcMessengerBadge();
     window.addEventListener("trassa-messenger-updated", onUpd);
     return () => window.removeEventListener("trassa-messenger-updated", onUpd);
-  }, [recalcMessengerBadge]);
+  }, [recalcMessengerBadge, messengerEnabled]);
 
   useEffect(() => {
+    if (!messengerEnabled) return;
     if (cabinetSection !== "messenger") return;
     const t = Date.now();
     try {
@@ -229,9 +236,10 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
     }
     setMessengerSeenAt(t);
     setMessengerHasUnread(false);
-  }, [cabinetSection]);
+  }, [cabinetSection, messengerEnabled]);
 
   useEffect(() => {
+    if (!messengerEnabled) return;
     const sp = new URLSearchParams(location.search);
     const t = sp.get(MSGR_INVITE_PARAM);
     if (!t) return;
@@ -244,7 +252,14 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
     setCabinetSection("messenger");
     setMessengerMountKey((k) => k + 1);
     navigate({ pathname: location.pathname, search: "" }, { replace: true });
-  }, [location.search, location.pathname, navigate]);
+  }, [location.search, location.pathname, navigate, messengerEnabled]);
+
+  useEffect(() => {
+    if (messengerEnabled) return;
+    if (cabinetSection === "messenger") {
+      setCabinetSection("dashboard");
+    }
+  }, [messengerEnabled, cabinetSection]);
 
   const handleSearchChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -535,96 +550,77 @@ function CabinetChromeLayout({ cabinetPath, children }: Props) {
           </div>
 
           <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 16 }}>
-            <HoverTooltip
-              preset={sidebarTooltipPreset}
-              isDark={isDark}
-              content={
-                <span style={{ whiteSpace: "nowrap" }}>
-                  {cabinetSection === "messenger"
-                    ? "Свернуть мессенджер"
-                    : messengerHasUnread
-                      ? "Открыть мессенджер — есть непрочитанные"
-                      : "Открыть мессенджер"}
-                </span>
-              }
-            >
-              <div style={{ position: "relative", display: "inline-flex" }}>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setCabinetSection((prev) => (prev === "messenger" ? "dashboard" : "messenger"))
-                  }
-                  aria-label="Мессенджер"
-                  style={{
-                    border: "none",
-                    background:
-                      cabinetSection === "messenger"
-                        ? isDark
-                          ? "rgba(79, 128, 243, 0.35)"
-                          : "rgba(36, 59, 116, 0.92)"
-                        : styles.buttonBg,
-                    padding: 12,
-                    borderRadius: "50%",
-                    cursor: "pointer",
-                    boxShadow:
-                      cabinetSection === "messenger"
-                        ? `${styles.insetShadow}, 0 0 0 2px rgba(79, 128, 243, 0.65)`
-                        : styles.insetShadow,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <svg width={22} height={22} viewBox="0 0 24 24" fill="none" aria-hidden>
-                    <path
-                      d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
-                      stroke="#f8fafc"
-                      strokeWidth="1.75"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-                {messengerHasUnread && cabinetSection !== "messenger" ? (
-                  <span
-                    aria-hidden
-                    style={{
-                      position: "absolute",
-                      top: 2,
-                      right: 2,
-                      width: 10,
-                      height: 10,
-                      borderRadius: "50%",
-                      background: "#f87171",
-                      boxShadow: isDark
-                        ? "0 0 0 2px #1c2b45, 0 2px 6px rgba(0,0,0,0.4)"
-                        : "0 0 0 2px #f8fafc, 0 2px 6px rgba(15,23,42,0.2)",
-                      pointerEvents: "none",
-                    }}
-                  />
-                ) : null}
-              </div>
-            </HoverTooltip>
-            {import.meta.env.DEV ? (
-              <button
-                type="button"
-                onClick={() => injectMessengerTestIncoming()}
-                title="Симуляция входящего сообщения. Сверните мессенджер — на иконке появится точка."
-                style={{
-                  border: "none",
-                  background: "transparent",
-                  color: styles.muted,
-                  fontSize: 11,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  textDecoration: "underline",
-                  textUnderlineOffset: 2,
-                  padding: "4px 0",
-                  fontFamily: "inherit",
-                }}
+            {messengerEnabled ? (
+              <HoverTooltip
+                preset={sidebarTooltipPreset}
+                isDark={isDark}
+                content={
+                  <span style={{ whiteSpace: "nowrap" }}>
+                    {cabinetSection === "messenger"
+                      ? "Свернуть мессенджер"
+                      : messengerHasUnread
+                        ? "Открыть мессенджер — есть непрочитанные"
+                        : "Открыть мессенджер"}
+                  </span>
+                }
               >
-                Тест: входящее
-              </button>
+                <div style={{ position: "relative", display: "inline-flex" }}>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setCabinetSection((prev) => (prev === "messenger" ? "dashboard" : "messenger"))
+                    }
+                    aria-label="Мессенджер"
+                    style={{
+                      border: "none",
+                      background:
+                        cabinetSection === "messenger"
+                          ? isDark
+                            ? "rgba(79, 128, 243, 0.35)"
+                            : "rgba(36, 59, 116, 0.92)"
+                          : styles.buttonBg,
+                      padding: 12,
+                      borderRadius: "50%",
+                      cursor: "pointer",
+                      boxShadow:
+                        cabinetSection === "messenger"
+                          ? `${styles.insetShadow}, 0 0 0 2px rgba(79, 128, 243, 0.65)`
+                          : styles.insetShadow,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" aria-hidden>
+                      <path
+                        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+                        stroke="#f8fafc"
+                        strokeWidth="1.75"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                  {messengerHasUnread && cabinetSection !== "messenger" ? (
+                    <span
+                      aria-hidden
+                      style={{
+                        position: "absolute",
+                        top: 2,
+                        right: 2,
+                        width: 10,
+                        height: 10,
+                        borderRadius: "50%",
+                        background: "#f87171",
+                        boxShadow: isDark
+                          ? "0 0 0 2px #1c2b45, 0 2px 6px rgba(0,0,0,0.4)"
+                          : "0 0 0 2px #f8fafc, 0 2px 6px rgba(15,23,42,0.2)",
+                        pointerEvents: "none",
+                      }}
+                    />
+                  ) : null}
+                </div>
+              </HoverTooltip>
             ) : null}
             <div
               style={{
