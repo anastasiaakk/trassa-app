@@ -91,8 +91,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "dev:all": "kill-port 4000 && concurrently -k \"npm run dev --prefix server\" \"npm run dev\" --names \"API,WEB\" --prefix-colors \"cyan,magenta\"",
-    "build": "node scripts/ensure-public-assets.cjs && node scripts/apply-release-config.cjs && tsc && vite build",
+    "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "start": "vite",
@@ -106,5 +105,5 @@
     "server:dev": "npm run dev --prefix server",
     "server:install": "npm install --prefix server"
   },
-  "version": "0.1.0"
+  "version": "0.1.1"
 }
