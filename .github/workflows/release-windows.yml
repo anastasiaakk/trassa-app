@@ -102,33 +102,11 @@ jobs:
         if: steps.gate.outputs.run == 'true'
         env:
           NODE_OPTIONS: --max-old-space-size=8192
-        run: node scripts/clean-release-win-unpacked.cjs && npx electron-builder --win dir --publish never && node scripts/embed-win-icon.cjs
+        run: node scripts/clean-release-win-unpacked.cjs && npx electron-builder --win portable --publish never
 
-      - name: "Build: neo setup wizard (portable installer)"
+      - name: "Build: restore server deps"
         if: steps.gate.outputs.run == 'true'
-        shell: pwsh
-        env:
-          NODE_OPTIONS: --max-old-space-size=8192
-        run: |
-          $log = "neo-setup.log"
-          node scripts/build-neo-setup.cjs *>&1 | Tee-Object -FilePath $log
-          if ($LASTEXITCODE -ne 0) {
-            Write-Host "::error::neo setup failed with exit code $LASTEXITCODE"
-            exit $LASTEXITCODE
-          }
-
-      - name: "Upload debug logs (always)"
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: gha-debug-logs
-          if-no-files-found: ignore
-          path: |
-            neo-setup.log
-
-      - name: "Build: sync downloads + restore server deps"
-        if: steps.gate.outputs.run == 'true'
-        run: node scripts/sync-setup-download.cjs && npm run server:restoredeps
+        run: npm run server:restoredeps
 
       - name: Prepare release files
         if: steps.gate.outputs.run == 'true'
@@ -136,8 +114,10 @@ jobs:
         run: |
           $pkg = Get-Content package.json -Raw | ConvertFrom-Json
           $v = $pkg.version
-          $exe = Get-ChildItem -Path release -Filter "*.exe" -File | Select-Object -First 1
-          if (-not $exe) { throw "В папке release нет .exe после сборки." }
+          $exe = Get-ChildItem -Path packaged-app -Filter "*.exe" -File -Recurse |
+            Where-Object { $_.Name -notmatch "unins" } |
+            Select-Object -First 1
+          if (-not $exe) { throw "После сборки не найден .exe в packaged-app." }
           Copy-Item -LiteralPath $exe.FullName -Destination "trassa-setup.exe" -Force
           $repo = "${{ github.repository }}"
           $setupUrl = "https://github.com/$repo/releases/latest/download/trassa-setup.exe"
