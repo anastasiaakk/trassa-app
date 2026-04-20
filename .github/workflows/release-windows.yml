@@ -30,6 +30,8 @@ jobs:
     timeout-minutes: 60
     env:
       TRASSA_MANIFEST_URL: https://github.com/${{ github.repository }}/releases/latest/download/app-update.json
+      # Иначе electron-builder на Windows ищет сертификат для подписи и падает с кодом 1 (в т.ч. на втором шаге — setup-wizard portable).
+      CSC_IDENTITY_AUTO_DISCOVERY: false
 
     steps:
       - name: Checkout

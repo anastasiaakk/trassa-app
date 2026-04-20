@@ -2,6 +2,11 @@
  * Копирует packaged-app/win-unpacked → setup-wizard/payload-app и собирает неоморфный установщик
  * (release/Трасса Setup 0.1.0.exe).
  */
+/* Без подписи: иначе electron-builder на Windows ищет сертификат и падает с кодом 1 (часто на portable). */
+if (process.env.CSC_IDENTITY_AUTO_DISCOVERY === undefined) {
+  process.env.CSC_IDENTITY_AUTO_DISCOVERY = "false";
+}
+
 const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
@@ -26,6 +31,7 @@ if (!fs.existsSync(path.join(setupDir, "node_modules"))) {
   execSync("npm install", { cwd: setupDir, stdio: "inherit", shell: true });
 }
 
+console.log("[build-neo-setup] запуск: npm run build (vite + electron-builder portable)…");
 execSync("npm run build", { cwd: setupDir, stdio: "inherit", shell: true });
 
 const setupDist = path.join(root, "release", "setup-dist");
