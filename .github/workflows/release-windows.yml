@@ -35,6 +35,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # До setup-node в PATH может не быть `node` — версию читаем через PowerShell.
       - name: Нужна ли сборка (релиз для этой версии уже есть?)
         id: gate
         shell: pwsh
@@ -46,7 +47,8 @@ jobs:
             echo "Ручной запуск — всегда собираем (артефакт без Release)."
             exit 0
           }
-          $v = node -p "require('./package.json').version"
+          $pkg = Get-Content package.json -Raw | ConvertFrom-Json
+          $v = $pkg.version
           $tag = "v$v"
           echo "version_tag=$tag" >> $env:GITHUB_OUTPUT
           gh release view $tag 2>$null
@@ -118,6 +120,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          $tag = node -p "require('./package.json').version"
-          $tag = "v$tag"
+          $pkg = Get-Content package.json -Raw | ConvertFrom-Json
+          $tag = "v$($pkg.version)"
+          # Если релиз уже есть (гонка или повтор), не падать
+          gh release view $tag 2>$null
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host "::notice::Релиз $tag уже существует — только загружаем файлы."
+            gh release upload $tag "trassa-setup.exe" "app-update.json" --clobber
+            exit 0
+          }
           gh release create $tag --title "Трасса $tag" --target "${{ github.sha }}" --generate-notes "trassa-setup.exe" "app-update.json"
