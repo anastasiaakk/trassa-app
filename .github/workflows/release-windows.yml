@@ -35,7 +35,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # До setup-node в PATH может не быть `node` — версию читаем через PowerShell.
       - name: Нужна ли сборка (релиз для этой версии уже есть?)
@@ -67,7 +67,7 @@ jobs:
 
       - name: Setup Node.js
         if: steps.gate.outputs.run == 'true'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: npm
@@ -137,7 +137,7 @@ jobs:
 
       - name: Upload build artifact (ручной запуск)
         if: github.event_name == 'workflow_dispatch' && steps.gate.outputs.run == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: trassa-windows-release
           path: |
